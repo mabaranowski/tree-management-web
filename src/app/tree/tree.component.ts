@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TreeNode } from 'primeng/api';
 import { NodeManagementService } from '../service/node-management.service';
+import { Node } from '../model/node';
 
 @Component({
   selector: 'app-tree',
@@ -9,31 +9,32 @@ import { NodeManagementService } from '../service/node-management.service';
 })
 export class TreeComponent implements OnInit {
   
-  rootNode: TreeNode[];
+  rootNode: Node[];
 
   constructor(private nodeService: NodeManagementService) { }
   
   ngOnInit(): void {
-    this.rootNode = [this.nodeService.createNode()];
+    this.rootNode = [this.nodeService.createNode(null)];
 
     //TODO Retrive from database
   }
 
-  ngOnChanges(): void {
-    // console.log(this.rootNode);
-
+  updateOnChangeDetect(): void {
+    this.nodeService.toggleLeaf(this.rootNode[0]);
+    this.nodeService.calculateSumForLeafs(this.rootNode[0]);
+    
     //TODO Save to database
   }
 
-  addNode(inputNode: TreeNode) {
-    const newNode = this.nodeService.createNode();
-    this.nodeService.addChildrenToNode(inputNode.children, inputNode, newNode);
-    this.ngOnChanges();
+  addNode(inputNode: Node): void {
+    const newNode: Node = this.nodeService.createNode(inputNode);
+    this.nodeService.addChildrenToNode(inputNode, newNode);
+    this.updateOnChangeDetect();
   }
 
-  removeNode(inputNode: TreeNode) {
+  removeNode(inputNode: Node): void {
     this.nodeService.deleteNode(this.rootNode[0], inputNode);
-    this.ngOnChanges();
+    this.updateOnChangeDetect();
   }
 
 }

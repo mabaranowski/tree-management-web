@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { TreeNode } from 'primeng/api/treenode';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as UUID } from 'uuid';
+import { Node } from '../model/node';
 
 @Injectable({
   providedIn: 'root'
@@ -9,41 +9,62 @@ export class NodeManagementService {
 
   constructor() { }
 
-  createNode(): TreeNode {
+  createNode(parentNode: Node): Node {
     return {
-      key: uuidv4(),
-      label: '',
+      key: UUID(),
+      label: '0',
       children: [],
+      parentNode: parentNode,
       expanded: true
     };
   }
 
-  addChildrenToNode(childrenNodes: TreeNode[], parentNode: TreeNode, newNode: TreeNode) {
-    childrenNodes.forEach(childNode => {
+  addChildrenToNode(parentNode: Node, newNode: Node): void {
+    parentNode.children.forEach(childNode => {
       if(childNode.key === parentNode.key) {
         childNode.children.push(newNode);
         return;
       }
     });
-
-    childrenNodes.push(newNode);
+    parentNode.children.push(newNode);
   }
 
-  deleteNode(rootNode: TreeNode, toDeleteNode: TreeNode) {
-    if(!!rootNode.children) {
-      rootNode.children.forEach(childNode => {
-        if(childNode.key === toDeleteNode.key) {
-          const index = rootNode.children.indexOf(toDeleteNode);
-          rootNode.children.splice(index, 1);
-          return;
-        }
-        this.deleteNode(childNode, toDeleteNode);
-      });
+  deleteNode(rootNode: Node, toDeleteNode: Node): void {
+    rootNode === toDeleteNode ? rootNode.children = [] :
+    rootNode.children.forEach(childNode => {
+      if(childNode.key === toDeleteNode.key) {
+        const index = rootNode.children.indexOf(toDeleteNode);
+        rootNode.children.splice(index, 1);
+        return;
+      }
+      this.deleteNode(childNode, toDeleteNode);
+    });
+  }
+
+  toggleLeaf(rootNode: Node): void {
+    rootNode.children.forEach(childNode => {
+      childNode.leaf = childNode.children.length > 0 ? false : true;
+      this.toggleLeaf(childNode);
+    });
+  }
+
+  sum: number;
+  findPathToRoot(inputNode: Node): void {
+    if(!!inputNode.parentNode) {
+      this.sum += +inputNode.parentNode.label
+      this.findPathToRoot(inputNode.parentNode);
     }
   }
 
-  findPath(rootNode: TreeNode, leaf: TreeNode) {
-    
+  calculateSumForLeafs(rootNode: Node): void {
+    rootNode.children.forEach(childNode => {
+      if(childNode.leaf) {
+        this.sum = 0;
+        this.findPathToRoot(childNode);
+        childNode.label = this.sum.toString();
+      }
+      this.calculateSumForLeafs(childNode);
+    });
   }
 
 }
