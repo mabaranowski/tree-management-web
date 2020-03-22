@@ -12,10 +12,11 @@ For a server side, go to [tree-management-api](https://github.com/mabaranowski/t
 ## Deployment
 To deploy full-stack app, start with this project.
 Make sure both tree-management-api and tree-management-web are in the same directory.
-Build project with ng build.
+Build project with npm install and ng build.
 
 ## Build
 ```
+$ npm install
 $ ng build
 ```
 
