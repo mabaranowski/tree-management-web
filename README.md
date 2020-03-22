@@ -1,27 +1,30 @@
-# TreeManagementWeb
+# tree-management-web 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.21.
+## Description
+Client side of tree-like structure management web app.
+For a server side, go to [tree-management-api](https://github.com/mabaranowski/tree-management-api.git)
 
-## Development server
+## Requirements
+- Node.js 13.5.0
+- npm 6.14.2
+- Angular CLI 8.3.21
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Deployment
+To deploy full-stack app, start with this project.
+Make sure both tree-management-api and tree-management-web are in the same directory.
+Build project with ng build.
 
 ## Build
+```
+$ ng build
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Development
+```
+$ ng serve
+```
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Tests
+```
+$ ng test
+```
