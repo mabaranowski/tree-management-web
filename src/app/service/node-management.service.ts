@@ -12,7 +12,7 @@ export class NodeManagementService {
   createNode(parentNode: Node): Node {
     return {
       key: UUID(),
-      label: '0',
+      value: 0,
       children: [],
       parentNode: parentNode,
       expanded: true
@@ -48,23 +48,23 @@ export class NodeManagementService {
     });
   }
 
-  sum: number;
-  findPathToRoot(inputNode: Node): void {
-    if(!!inputNode.parentNode) {
-      this.sum += +inputNode.parentNode.label
-      this.findPathToRoot(inputNode.parentNode);
-    }
-  }
-
   calculateSumForLeafs(rootNode: Node): void {
     rootNode.children.forEach(childNode => {
       if(childNode.leaf) {
         this.sum = 0;
         this.findPathToRoot(childNode);
-        childNode.label = this.sum.toString();
+        childNode.value = this.sum;
       }
       this.calculateSumForLeafs(childNode);
     });
+  }
+
+  sum: number;
+  private findPathToRoot(inputNode: Node): void {
+    if(!!inputNode.parentNode) {
+      this.sum += inputNode.parentNode.value
+      this.findPathToRoot(inputNode.parentNode);
+    }
   }
 
 }

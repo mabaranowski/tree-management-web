@@ -2,12 +2,10 @@
     <p-tree *ngIf="!!rootNode" [value]="rootNode" layout="horizontal">
         <ng-template let-node pTemplate="default">
             <input 
-            *ngIf="!node.leaf" 
-            [(ngModel)]="node.label" 
+            [(ngModel)]="node.value" 
             type="number" 
             class="inputField"
             (change)="updateOnChangeDetect()">
-            <div *ngIf="node.leaf" class="inputField">{{node.label}}</div>
             <button (click)="addNode(node)">Add</button>
             <button (click)="removeNode(node)">Del</button>
         </ng-template>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NodeManagementService } from '../service/node-management.service';
+import { NodeConnectionService } from '../service/node-connection.service';
 import { Node } from '../model/node';
 
 @Component({
@@ -9,21 +10,27 @@ import { Node } from '../model/node';
 })
 export class TreeComponent implements OnInit {
   
-  rootNode: Node[];
+  rootNode: Node[] = [];
 
-  constructor(private nodeService: NodeManagementService) { }
+  constructor(
+    private nodeService: NodeManagementService,
+    private connectionService: NodeConnectionService
+  ) { }
   
   ngOnInit(): void {
     this.rootNode = [this.nodeService.createNode(null)];
-
-    //TODO Retrive from database
+    this.connectionService.retrieveNodeTree().subscribe(nodeList => {
+      if(nodeList.length > 0) {
+        this.rootNode = this.connectionService.serializeTree(nodeList);
+      }
+    });
   }
 
   updateOnChangeDetect(): void {
-    this.nodeService.toggleLeaf(this.rootNode[0]);
-    this.nodeService.calculateSumForLeafs(this.rootNode[0]);
-    
-    //TODO Save to database
+    const root = this.rootNode[0];
+    this.nodeService.toggleLeaf(root);
+    this.nodeService.calculateSumForLeafs(root);
+    this.connectionService.saveNodeTree(root).subscribe();
   }
 
   addNode(inputNode: Node): void {
